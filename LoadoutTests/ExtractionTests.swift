@@ -86,6 +86,24 @@ final class ExtractionTests: XCTestCase {
         XCTAssertEqual(scan.items.first?.subpath, [])
     }
 
+    func testZipWithDamagedMacMetadata() throws {
+        let src = box.root.appendingPathComponent("ZipSrc", isDirectory: true)
+        try box.write("Pack/Look.cube", in: src, Fixtures.cube)
+        try box.write("__MACOSX/Pack/._Look.cube", in: src, "not AppleDouble")
+        let zip = box.inbox.appendingPathComponent("Damaged.zip")
+        let zipper = Process()
+        zipper.executableURL = URL(fileURLWithPath: "/usr/bin/zip")
+        zipper.currentDirectoryURL = src
+        zipper.arguments = ["-q", "-r", zip.path, "Pack", "__MACOSX"]
+        try zipper.run(); zipper.waitUntilExit()
+        XCTAssertEqual(zipper.terminationStatus, 0)
+
+        let scan = try PackScanner(stagingRoot: box.root.appendingPathComponent("Staging")).scan([zip])
+        defer { scan.cleanUp() }
+        XCTAssertEqual(scan.items.map(\.kind), [.lut])
+        XCTAssertEqual(scan.items.first?.source.lastPathComponent, "Look.cube")
+    }
+
     func testLooseUnsortedSetting() throws {
         let file = try box.write("Mystery.setting", Fixtures.plainSetting)
         let scan = try scanner.scan([file])

@@ -25,7 +25,7 @@ struct CubeLUT {
     var values: [SIMD3<Float>]
 
     init(url: URL) throws {
-        guard let text = try? String(contentsOf: url, encoding: .utf8) ?? String(contentsOf: url, encoding: .isoLatin1) else {
+        guard let text = (try? String(contentsOf: url, encoding: .utf8)) ?? (try? String(contentsOf: url, encoding: .isoLatin1)) else {
             throw ParseError.notACube
         }
         try self.init(text: text)

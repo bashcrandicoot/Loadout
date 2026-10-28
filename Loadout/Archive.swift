@@ -14,7 +14,15 @@ enum Archive {
     /// Unzips `zip` into `folder` (created if needed).
     static func extract(_ zip: URL, into folder: URL) throws {
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-        try run("/usr/bin/ditto", ["-x", "-k", zip.path, folder.path])
+        do {
+            try run("/usr/bin/ditto", ["-x", "-k", zip.path, folder.path])
+        } catch {
+            // ditto gives up on a damaged __MACOSX/._file (common in packs re-zipped on
+            // Windows or by web tools). Those entries are Finder metadata, so skip them.
+            try? FileManager.default.removeItem(at: folder)
+            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+            try run("/usr/bin/unzip", ["-qq", "-o", zip.path, "-x", "__MACOSX/*", "*/._*", "._*", "-d", folder.path])
+        }
     }
 
     /// Zips a folder's contents (used by tests to build packs).

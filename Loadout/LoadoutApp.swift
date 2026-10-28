@@ -90,7 +90,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
 /// `LOADOUT_SCREENSHOT=1` (with `open -g -j`) shows the window behind other apps without
 /// activating Loadout, so `screencapture -l` can capture it while the user keeps working.
-/// `LOADOUT_DEMO_DROP=/path.zip` opens the drop sheet for that file.
+/// `LOADOUT_DEMO_DROP=/path.zip` opens the drop sheet for that file (after `LOADOUT_DEMO_DROP_DELAY` seconds).
 enum Screenshots {
     static var isActive: Bool { ProcessInfo.processInfo.environment["LOADOUT_SCREENSHOT"] == "1" }
 
@@ -108,11 +108,48 @@ enum Screenshots {
                 window.orderBack(nil)
             }
             if let drop = env["LOADOUT_DEMO_DROP"], !drop.isEmpty {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                // LOADOUT_DEMO_DROP_DELAY=seconds leaves time to capture the Library first.
+                let delay = Double(env["LOADOUT_DEMO_DROP_DELAY"] ?? "") ?? 0.4
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                     AppDelegate.model?.handleDrop([URL(fileURLWithPath: drop)])
+                    showDropSheetPanel(over: NSApp.windows.first { $0.title == "Loadout" })
                 }
             }
         }
+    }
+
+    /// A sheet on a background window never finishes laying out, so screenshot mode shows the
+    /// drop sheet's content in its own panel, placed where the sheet would be.
+    static var showsDropSheetInPanel: Bool {
+        isActive && !(ProcessInfo.processInfo.environment["LOADOUT_DEMO_DROP"] ?? "").isEmpty
+    }
+    private static var panel: NSWindow?
+
+    @MainActor static func showDropSheetPanel(over parent: NSWindow?, attempt: Int = 0) {
+        guard let model = AppDelegate.model else { return }
+        guard model.pending != nil else {
+            if attempt < 50 && model.errorMessage == nil {   // the scan runs in the background
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { showDropSheetPanel(over: parent, attempt: attempt + 1) }
+            }
+            return
+        }
+        let host = NSHostingView(rootView: DropSheet().environmentObject(model))
+        let size = host.fittingSize
+        let window = NSWindow(contentRect: NSRect(origin: .zero, size: size),
+                              styleMask: [.titled, .fullSizeContentView], backing: .buffered, defer: false)
+        window.title = "Install"
+        window.titleVisibility = .hidden
+        window.titlebarAppearsTransparent = true
+        for button in [NSWindow.ButtonType.closeButton, .miniaturizeButton, .zoomButton] {
+            window.standardWindowButton(button)?.isHidden = true
+        }
+        window.contentView = host
+        window.isReleasedWhenClosed = false
+        if let frame = parent?.frame {
+            window.setFrameTopLeftPoint(NSPoint(x: frame.midX - size.width / 2, y: frame.maxY - 52))
+        }
+        window.orderBack(nil)
+        panel = window
     }
 
     /// Draws windows with their active look although Loadout stays in the background.

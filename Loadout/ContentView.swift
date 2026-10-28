@@ -29,7 +29,7 @@ struct ContentView: View {
             loadURLs(providers) { model.handleDrop($0) }
             return true
         }
-        .sheet(item: $model.pending) { _ in
+        .sheet(item: Screenshots.showsDropSheetInPanel ? .constant(nil) : $model.pending) { _ in
             DropSheet()
                 .environmentObject(model)
         }
