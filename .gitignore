@@ -1,0 +1,29 @@
+# Xcode
+xcuserdata/
+*.xcuserstate
+DerivedData/
+build/
+*.xcscmblueprint
+*.xccheckout
+
+# macOS
+.DS_Store
+
+# Swift Package Manager
+.build/
+.swiftpm/xcode/
+
+# Build products
+*.ipa
+*.dSYM.zip
+*.dmg
+
+# Secrets (never commit these)
+.env
+.env.*
+*.pem
+*.p12
+*.key
+*.mobileprovision
+Secrets.xcconfig
+*.xcconfig.local

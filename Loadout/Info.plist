@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>DaVinci Resolve Asset</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.sebastianphillips.loadout.cube</string>
+				<string>com.sebastianphillips.loadout.3dl</string>
+				<string>com.sebastianphillips.loadout.dctl</string>
+				<string>com.sebastianphillips.loadout.setting</string>
+				<string>com.sebastianphillips.loadout.drfx</string>
+				<string>public.zip-archive</string>
+				<string>public.folder</string>
+			</array>
+		</dict>
+	</array>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.sebastianphillips.loadout.cube</string>
+			<key>UTTypeDescription</key>
+			<string>Cube LUT</string>
+			<key>UTTypeConformsTo</key>
+			<array><string>public.data</string></array>
+			<key>UTTypeTagSpecification</key>
+			<dict><key>public.filename-extension</key><array><string>cube</string></array></dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.sebastianphillips.loadout.3dl</string>
+			<key>UTTypeDescription</key>
+			<string>3DL LUT</string>
+			<key>UTTypeConformsTo</key>
+			<array><string>public.data</string></array>
+			<key>UTTypeTagSpecification</key>
+			<dict><key>public.filename-extension</key><array><string>3dl</string></array></dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.sebastianphillips.loadout.dctl</string>
+			<key>UTTypeDescription</key>
+			<string>DaVinci CTL</string>
+			<key>UTTypeConformsTo</key>
+			<array><string>public.data</string></array>
+			<key>UTTypeTagSpecification</key>
+			<dict><key>public.filename-extension</key><array><string>dctl</string><string>dctle</string></array></dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.sebastianphillips.loadout.setting</string>
+			<key>UTTypeDescription</key>
+			<string>Fusion Template</string>
+			<key>UTTypeConformsTo</key>
+			<array><string>public.data</string></array>
+			<key>UTTypeTagSpecification</key>
+			<dict><key>public.filename-extension</key><array><string>setting</string></array></dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.sebastianphillips.loadout.drfx</string>
+			<key>UTTypeDescription</key>
+			<string>DaVinci Resolve Fusion Bundle</string>
+			<key>UTTypeConformsTo</key>
+			<array><string>public.data</string></array>
+			<key>UTTypeTagSpecification</key>
+			<dict><key>public.filename-extension</key><array><string>drfx</string></array></dict>
+		</dict>
+	</array>
+</dict>
+</plist>
