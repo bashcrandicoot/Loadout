@@ -23,10 +23,11 @@ VOLNAME="Loadout"
 ICONS="$ROOT/Loadout/Assets.xcassets/AppIcon.appiconset"
 OUT="$OUT_DIR/Loadout-$VERSION.dmg"
 
-# Refuse to package a release the README or the project don't name yet.
+# Refuse to package a version the project doesn't build, or with a stale README.
+# (A release also runs `scripts/check-version.sh --release`, see docs/RELEASING.md.)
 "$ROOT/scripts/check-version.sh" "$VERSION"
 
-[ -d "$APP" ] || { echo "No app at $APP (build the Release app first, see README.md)" >&2; exit 1; }
+[ -d "$APP" ] || { echo "No app at $APP (build the Release app first, see docs/RELEASING.md)" >&2; exit 1; }
 SETFILE="$(command -v SetFile || xcrun --find SetFile 2>/dev/null || true)"
 [ -n "$SETFILE" ] || { echo "SetFile not found (install Xcode or its command line tools)" >&2; exit 1; }
 

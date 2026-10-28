@@ -2,7 +2,7 @@
 
 **Loadout for DaVinci Resolve** puts LUTs, DCTLs and Fusion templates where DaVinci Resolve looks for them. Drop a file, a folder, a creator's pack or a `.zip` on the window, check what Loadout found, and click **Install to Resolve**.
 
-Made by **bashframes**. Current version: **1.0.0**.
+Made by **bashframes**. Loadout is in beta: there's no release yet.
 
 ## What it does
 
@@ -24,6 +24,12 @@ Loadout doesn't use Resolve's scripting API (that's Studio only), so it works wi
 As you install, turn off or remove things, a small strip shows your files sorting into a
 kit case (or out of it); the bar on its front is the real progress. See `docs/case-art.md`.
 
+## Updates
+
+Loadout checks for updates once a day with [Sparkle](https://sparkle-project.org) (and
+**Loadout ▸ Check for Updates…** any time). It only installs updates signed with Loadout's
+own key. How a release is made: [docs/RELEASING.md](docs/RELEASING.md).
+
 ## Requirements
 
 - macOS 14 Sonoma or later
@@ -44,6 +50,8 @@ xcodebuild -project Loadout.xcodeproj -scheme Loadout -configuration Release \
 # Disk image -> build/release/Loadout-<version>.dmg
 scripts/make-dmg.sh 1.0.0
 ```
+
+For a real release, follow [docs/RELEASING.md](docs/RELEASING.md).
 
 ### Trying it safely
 
