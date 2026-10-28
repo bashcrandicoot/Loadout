@@ -100,7 +100,8 @@ struct Installer {
 
     /// Copies the plan in and records it in `index`. All or nothing: a failure undoes every step.
     func install(_ planned: [PlannedFile], options: InstallOptions, sourceName: String,
-                 index: inout LibraryIndex, using fileOperator: FileOperating) throws -> InstallReport {
+                 index: inout LibraryIndex, using fileOperator: FileOperating,
+                 progress: FileOpProgress.Handler? = nil) throws -> InstallReport {
         var pack = index.pack(named: options.packName) ?? PackRecord(name: options.packName, sourceName: sourceName)
         pack.sourceName = sourceName
         pack.installedAt = Date()
@@ -142,7 +143,7 @@ struct Installer {
                                       bundleContents: file.item.bundleContents.isEmpty ? nil : file.item.bundleContents))
         }
 
-        try fileOperator.perform(folders + steps)
+        try fileOperator.perform(folders + steps, progress: progress)
 
         index.removeFiles(atHomes: replacedHomes)
         if let i = index.packs.firstIndex(where: { $0.id == pack.id }) {

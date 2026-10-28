@@ -194,19 +194,20 @@ struct LibraryActions {
         return ops
     }
 
-    func disable(_ items: [LibraryItem], using op: FileOperating) throws {
-        try op.perform(try disableOps(items))
+    func disable(_ items: [LibraryItem], using op: FileOperating, progress: FileOpProgress.Handler? = nil) throws {
+        try op.perform(try disableOps(items), progress: progress)
         cleanEmptyFolders(after: items)
     }
 
-    func enable(_ items: [LibraryItem], using op: FileOperating) throws {
-        try op.perform(enableOps(items))
+    func enable(_ items: [LibraryItem], using op: FileOperating, progress: FileOpProgress.Handler? = nil) throws {
+        try op.perform(enableOps(items), progress: progress)
         cleanEmptyFolders(after: items)
     }
 
     /// Trashes the files and forgets them in the index.
-    func remove(_ items: [LibraryItem], index: inout LibraryIndex, using op: FileOperating) throws {
-        try op.perform(try removeOps(items))
+    func remove(_ items: [LibraryItem], index: inout LibraryIndex, using op: FileOperating,
+                progress: FileOpProgress.Handler? = nil) throws {
+        try op.perform(try removeOps(items), progress: progress)
         index.removeFiles(atHomes: Set(items.map(\.homeURL.path)))
         cleanEmptyFolders(after: items)
     }

@@ -20,6 +20,62 @@ enum FileOp: Equatable {
 protocol FileOperating {
     /// Runs every step or none: if one fails, the ones before it are undone.
     func perform(_ ops: [FileOp]) throws
+    /// The same, reporting how far it has got (0…1, by bytes; ends with 1). `progress` may be
+    /// called on any thread.
+    func perform(_ ops: [FileOp], progress: FileOpProgress.Handler?) throws
+}
+
+extension FileOperating {
+    /// Operators that can't report steps (the administrator script) report once, at the end.
+    func perform(_ ops: [FileOp], progress: FileOpProgress.Handler?) throws {
+        try perform(ops)
+        progress?(1)
+    }
+}
+
+/// How far through a list of steps an operator is, weighted by the bytes each step moves, so
+/// the case's colour bar follows the real copy (a 300 MB .drfx counts for more than a LUT).
+struct FileOpProgress {
+    typealias Handler = (Double) -> Void
+
+    /// A move, a trash or a tiny file still counts for something.
+    static let minimumWeight: Double = 64 * 1024
+
+    let weights: [Double]
+    let total: Double
+
+    init(_ ops: [FileOp], size: (URL) -> Int64 = FileOpProgress.fileSize) {
+        weights = ops.map { op in
+            switch op {
+            case .makeDirectory: return 0
+            case .copy(let from, _): return max(Self.minimumWeight, Double(size(from)))
+            case .move, .trash: return Self.minimumWeight
+            }
+        }
+        total = weights.reduce(0, +)
+    }
+
+    /// The fraction done once the first `steps` steps have finished.
+    func fraction(afterSteps steps: Int) -> Double {
+        guard total > 0 else { return 1 }
+        return min(1, weights.prefix(max(0, steps)).reduce(0, +) / total)
+    }
+
+    /// A file's size, or a folder's total (a .drfx is a file, but be safe).
+    static func fileSize(_ url: URL) -> Int64 {
+        let fm = FileManager.default
+        var isDirectory: ObjCBool = false
+        guard fm.fileExists(atPath: url.path, isDirectory: &isDirectory) else { return 0 }
+        if !isDirectory.boolValue {
+            return (try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize).map(Int64.init) ?? 0
+        }
+        var sum: Int64 = 0
+        let walker = fm.enumerator(at: url, includingPropertiesForKeys: [.fileSizeKey])
+        while let item = walker?.nextObject() as? URL {
+            sum += Int64((try? item.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0)
+        }
+        return sum
+    }
 }
 
 enum FileOpError: LocalizedError {
@@ -40,10 +96,16 @@ struct LocalFileOperator: FileOperating {
     var trashDirectory: URL?
 
     func perform(_ ops: [FileOp]) throws {
+        try perform(ops, progress: nil)
+    }
+
+    func perform(_ ops: [FileOp], progress: FileOpProgress.Handler?) throws {
         let fm = FileManager.default
         var undo: [() -> Void] = []
+        let meter = progress.map { _ in FileOpProgress(ops) }
+        progress?(0)
         do {
-            for op in ops {
+            for (step, op) in ops.enumerated() {
                 switch op {
                 case .makeDirectory(let url):
                     var created: [URL] = []
@@ -81,11 +143,14 @@ struct LocalFileOperator: FileOperating {
                     }
                     undo.append { try? fm.moveItem(at: trashed, to: url) }
                 }
+                // Only a step that worked counts.
+                if let meter { progress?(meter.fraction(afterSteps: step + 1)) }
             }
         } catch {
             for step in undo.reversed() { step() }
             throw error
         }
+        progress?(1)
     }
 
     /// `name.cube`, then `name 2.cube`, `name 3.cube`…
@@ -181,12 +246,17 @@ struct AutoFileOperator: FileOperating {
     var paths: ResolvePaths
 
     func perform(_ ops: [FileOp]) throws {
+        try perform(ops, progress: nil)
+    }
+
+    func perform(_ ops: [FileOp], progress: FileOpProgress.Handler?) throws {
         let local = LocalFileOperator(trashDirectory: paths.trashDirectory)
         do {
-            try local.perform(ops)
+            try local.perform(ops, progress: progress)
         } catch where LocalFileOperator.isPermissionError(error)
                     && ops.contains(where: { $0.touchedURLs.contains(where: paths.mayNeedAdmin) }) {
-            try PrivilegedFileOperator().perform(ops)
+            // The local attempt was rolled back; the bar waits on the admin prompt, then fills.
+            try PrivilegedFileOperator().perform(ops, progress: progress)
         }
     }
 }
