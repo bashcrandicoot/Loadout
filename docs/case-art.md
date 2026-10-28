@@ -1,6 +1,6 @@
 # The Loadout case: art and motion
 
-The case in the drop sheet, the Library toast and the drag-over highlight is Maddy's final art
+The case in the install strip, the Library toast and the drag-over highlight is Maddy's final art
 (`Loadout/Assets.xcassets/LoadoutCase/`, vector PDFs with "Preserve Vector Data"). Only the
 drawing is hers; the motion, the interior, the shadow and the progress fill are code.
 `layers.json` (next to this file) is her layer map.
@@ -23,35 +23,42 @@ Not used in the app: `background` and `icon-overlay` (icon only).
 
 Case artboard: 640 x 560, which is the 1024 icon space minus (192, 232).
 
-## How it moves
+## How it moves: Maddy's "case-sort"
 
-- `CaseMotion.swift`: pure maths and `CaseDriver` (timings, easing, events). Unit tested.
-- `CaseArt.swift`: draws a `CasePose` from Maddy's layers.
-- `CaseStage.swift`: the TimelineView, cards and haptics; `CaseDropTarget` for drag-over.
+The motion follows Maddy's approved case-sort animation (`loadout-case-sort.html` and its
+motion notes), the install/uninstall counterpart of Lodge's wagon strip. It plays in a
+492 x 153 pt strip: a 41 pt header (icon, verb, title, "n of N · p%" or the Restart/Update
+Lists badge) over a 112 pt scene that is always dark. The strip sits in the install sheet
+above the footer, and the same strip on `.regularMaterial` is the Library toast.
 
-Lid: the lid group tilts back about its top edge (`rotation3DEffect` on x, perspective 0.35)
-and lifts. Between the open lid and the seam a code-drawn dark interior shows (there is no
-interior layer).
+Install: the latches flip and the lid opens; cards rise from the desk and arc into the case,
+each landing fills its group's segment of the bar; the lid closes with a squash and bounce,
+the latches click shut (left, then right, with a haptic each), a glow plays and the label
+turns green. Uninstall plays the story backwards.
 
-Latches: each closed lever flips about its pivot; past 90 degrees the open lever is shown.
+- `CaseSortMotion.swift`: her clocks and easing, the stage geometry (`CaseSortStage.strip`
+  is her `C2S`), the card budget and bar segments (`CaseSortLayout`) and `CaseSortDriver`,
+  which turns real progress into the story. Unit tested (`CaseSortTests`).
+- `CaseSortPainter.swift`: one `Canvas` drawing her layer order: background, sky glow, desk
+  shadows, cards, case glow, case back and lining, front (lid squash), bar, levers, sparkles.
+- `CaseSortStrip.swift`: header, strip, TimelineView engine, haptics, `CaseToast` and
+  `CaseDropTarget` (the case alone, opening, for drag-over).
 
-Progress bar: the color-bar layer is drawn as-is, and a Canvas clipped to its pill paints the
-unfilled part with the well colour (#111A2E) and a lit edge, so the gradient is revealed left to
-right. The glint is a white band clipped to the same pill. The fill only ever follows real
-progress: the file operator reports bytes done (`FileOpProgress`), and the bar never moves
-ahead of that or of the cards that have landed.
+Cards: her art (`LoadoutCards/`, vector PDFs). At most 9 cards, at most 4 per group, at least
+one per group present, never more cards than files. Only the groups in the run get a bar
+segment, split equally. DCTLs, effects and generators use the clip art; .drfx uses her
+bundle card.
 
-Shadow: Maddy's vectors carry none; the front group has a SwiftUI drop shadow
-(black 18 %, radius 6, y 5 at artboard scale) and her contact-shadow layer sits under it.
-
-Top-corner seam: the lid and the 90 % opaque lid rails antialias along the same rounded corner,
-so the lid's white edge can glow through. The lid is masked 1.5 units in under the rails
-(`lidCornersTucked`), which hides its edge there; between the rails it keeps its full edge.
+Real progress: the file operator reports bytes done (`FileOpProgress`). The story never runs
+ahead of that, and never faster than her pace (real installs take a few milliseconds, so
+without the cap every card would land at once).
 
 Reduce Motion: no flights, flips or bounces; a 0.3 s crossfade between the open and shut case
-while the bar fills (or drains) with the real progress.
+while the bar follows real progress.
 
-## Film
+## Stills
 
-Debug builds render the animation offscreen: `open -g -j -n --env LOADOUT_RENDER_CASE=/folder
-Loadout.app` writes PNG frames, stills and the real progress traces, without a window or focus.
+Debug builds render stills offscreen: `open -g -j -n --env LOADOUT_RENDER_CASE=/folder
+Loadout.app` writes her demo at fixed times (install and uninstall), stills from a real
+sandbox install, a slow copy, Reduce Motion, the toast and the drag-over case, without a
+window or focus. There is no film; app demos are recorded by hand.

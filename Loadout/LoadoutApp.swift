@@ -6,11 +6,11 @@ import AppKit
 enum LoadoutLauncher {
     static func main() {
         #if DEBUG
-        if let folder = CaseFilm.requestedFolder {
-            // Offscreen film of the case animation: no windows, never activates.
+        if let folder = CaseSortStills.requestedFolder {
+            // Offscreen case-sort stills: no windows, never activates.
             _ = NSApplication.shared
             NSApp.setActivationPolicy(.prohibited)
-            MainActor.assumeIsolated { CaseFilm.run(folder) }
+            MainActor.assumeIsolated { CaseSortStills.run(folder) }
             exit(0)
         }
         #endif
