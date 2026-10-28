@@ -14,6 +14,14 @@ struct ContentView: View {
                 LibraryView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .overlay { if dropTargeted { DropHighlight() } }
+                    .overlay(alignment: .bottom) {
+                        if let run = model.libraryRun {
+                            CaseToast(run: run) { model.caseRunSettled($0) }
+                                .padding(.bottom, 14)
+                                .transition(.move(edge: .bottom).combined(with: .opacity))
+                        }
+                    }
+                    .animation(.smooth(duration: 0.3), value: model.libraryRun?.id)
                 FooterBar()
             }
             .inspector(isPresented: $model.showInspector) {
@@ -86,12 +94,38 @@ struct DropHighlight: View {
             .strokeBorder(Color.accentColor, style: StrokeStyle(lineWidth: 2, dash: [7, 5]))
             .background(Color.accentColor.opacity(0.06), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
             .overlay {
-                Label("Drop to install in Resolve", systemImage: "square.and.arrow.down")
-                    .font(.title3.weight(.semibold))
-                    .foregroundStyle(Color.accentColor)
+                VStack(spacing: 10) {
+                    // The case opens wide for the drop.
+                    CaseDropTarget()
+                    Text("Drop to install in Resolve")
+                        .font(.title3.weight(.semibold))
+                        .foregroundStyle(Color.accentColor)
+                }
             }
             .padding(12)
             .allowsHitTesting(false)
+    }
+}
+
+/// A turn-off, turn-on or removal: the case unloads (or stashes) the items over the Library.
+struct CaseToast: View {
+    let run: CaseRun
+    var onSettled: (UUID) -> Void
+
+    var body: some View {
+        ZStack(alignment: .leading) {
+            CaseStage(run: run, layout: .toast, onSettled: onSettled)
+            Text(run.caption)
+                .font(.callout.weight(.medium))
+                .lineLimit(2)
+                .frame(width: 170, alignment: .leading)
+                .padding(.leading, 20)
+                .padding(.bottom, 34)   // the queued cards sit below
+        }
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(.separator.opacity(0.5)))
+        .shadow(color: .black.opacity(0.15), radius: 12, y: 4)
+        .allowsHitTesting(false)
     }
 }
 

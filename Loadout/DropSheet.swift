@@ -18,7 +18,17 @@ struct DropSheet: View {
         let installCount = plan.count - (pending.options.conflictPolicy == .skip ? conflicts.count : 0)
         let refresh = plan.map(\.kind.refresh).max() ?? .none
 
+        let installing = model.installRun != nil
+        let idleCards = CaseCard.cards(kinds: plan.filter { $0.conflict == nil || pending.options.conflictPolicy != .skip }.map(\.kind))
+
         return VStack(spacing: 0) {
+            // The flight case: the files go in when you install.
+            CaseStage(run: model.installRun, idleCards: idleCards, layout: .sheet,
+                      onSettled: { model.caseRunSettled($0) })
+                .frame(maxWidth: .infinity)
+                .padding(.top, 6)
+                .background(Color.primary.opacity(0.025))
+                .overlay(alignment: .bottom) { Divider() }
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     // Header: what was dropped.
@@ -137,11 +147,12 @@ struct DropSheet: View {
                 Button("Cancel", role: .cancel) { model.cancelPending() }
                     .keyboardShortcut(.cancelAction)
                     .controlSize(.large)
-                Button("Install to Resolve") { model.installPending() }
+                    .disabled(installing)
+                Button(installing ? "Installing…" : "Install to Resolve") { model.installPending() }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
                     .keyboardShortcut(.defaultAction)
-                    .disabled(installCount == 0 || pending.options.packName.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .disabled(installing || installCount == 0 || pending.options.packName.trimmingCharacters(in: .whitespaces).isEmpty)
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 14)
@@ -149,6 +160,7 @@ struct DropSheet: View {
         }
         .frame(width: 540)
         .frame(minHeight: 420, idealHeight: 600, maxHeight: 760)
+        .interactiveDismissDisabled(installing)
     }
 
     private func binding<T>(_ keyPath: WritableKeyPath<InstallOptions, T>) -> Binding<T> {
