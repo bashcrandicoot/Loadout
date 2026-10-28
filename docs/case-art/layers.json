@@ -1,0 +1,688 @@
+{
+  "asset": "Loadout app icon case art (A4 · Kit Case — Color Bar), approved Oct 28 2026",
+  "coordinate_spaces": {
+    "icon_1024": "Same as the 1024 × 1024 app icon grid; origin top-left, y down. Squircle body 100–924.",
+    "case_artboard": {
+      "origin_in_icon_1024": [
+        192,
+        232
+      ],
+      "size": [
+        640,
+        560
+      ],
+      "note": "Case-only artboard: subtract the origin from icon_1024 coordinates. Every case-artboard file uses this same viewBox, so pieces stack in register."
+    }
+  },
+  "z_order": "Lower z draws first. Default closed stack: background → contact-shadow → handle → body → lid → rails-body → rails-lid → color-bar → latch-left-base → latch-left-lever-closed → latch-right-base → latch-right-lever-closed → icon-overlay. Open-lever pieces replace the closed ones (same z slot).",
+  "rig": {
+    "lid_group": [
+      "lid",
+      "rails-lid",
+      "handle"
+    ],
+    "body_group": [
+      "body",
+      "rails-body",
+      "color-bar",
+      "latch-left-base",
+      "latch-right-base"
+    ],
+    "lid_hinge": {
+      "axis_y_icon_1024": 498,
+      "axis_y_case_artboard": 266,
+      "x_range_icon_1024": [
+        264,
+        760
+      ]
+    },
+    "latch_lever_pivots_icon_1024": {
+      "left": [
+        356,
+        540.0
+      ],
+      "right": [
+        668,
+        540.0
+      ]
+    },
+    "suggested_sequence_install": "drop in (case + contact shadow) → levers closed → bar fills L→R; uninstall: levers open → lid lifts on hinge → case lifts out, shadow fades"
+  },
+  "raster_effects_not_in_vectors": {
+    "glyph_drop_shadow": "whole case glyph: Gaussian blur 6, offset y +5, black 18% (icon 1024 units)",
+    "icon_outer_shadow": "squircle: blur 14, offset y +12, black 35%"
+  },
+  "layers": [
+    {
+      "name": "background",
+      "z": 0,
+      "in_default_closed_stack": true,
+      "files": {
+        "icon_1024": {
+          "svg": "icon-1024/loadout-case-layer-background.svg",
+          "pdf": "icon-1024/loadout-case-layer-background.pdf"
+        }
+      },
+      "bbox_icon_1024": {
+        "x": 100,
+        "y": 100,
+        "w": 824,
+        "h": 824
+      },
+      "anchors_icon_1024": {
+        "center": [
+          512,
+          512
+        ]
+      },
+      "note": "Night sky + glow + stars, clipped to the macOS squircle (824 px at 100–924)."
+    },
+    {
+      "name": "contact-shadow",
+      "z": 1,
+      "in_default_closed_stack": true,
+      "files": {
+        "icon_1024": {
+          "svg": "icon-1024/loadout-case-layer-contact-shadow.svg",
+          "pdf": "icon-1024/loadout-case-layer-contact-shadow.pdf"
+        },
+        "case_artboard": {
+          "svg": "case-artboard/loadout-case-layer-contact-shadow.svg",
+          "pdf": "case-artboard/loadout-case-layer-contact-shadow.pdf"
+        },
+        "xcassets_imageset": "xcassets/LoadoutCase/LoadoutCaseContactShadow.imageset"
+      },
+      "bbox_icon_1024": {
+        "x": 272,
+        "y": 713,
+        "w": 480,
+        "h": 34
+      },
+      "bbox_case_artboard": {
+        "x": 80,
+        "y": 481,
+        "w": 480,
+        "h": 34
+      },
+      "anchors_icon_1024": {
+        "center": [
+          512,
+          730
+        ]
+      },
+      "anchors_case_artboard": {
+        "center": [
+          320,
+          498
+        ]
+      },
+      "note": "Soft contact shadow under the case. Scale x/opacity with the case height for a lift/drop."
+    },
+    {
+      "name": "handle",
+      "z": 2,
+      "in_default_closed_stack": true,
+      "files": {
+        "icon_1024": {
+          "svg": "icon-1024/loadout-case-layer-handle.svg",
+          "pdf": "icon-1024/loadout-case-layer-handle.pdf"
+        },
+        "case_artboard": {
+          "svg": "case-artboard/loadout-case-layer-handle.svg",
+          "pdf": "case-artboard/loadout-case-layer-handle.pdf"
+        },
+        "xcassets_imageset": "xcassets/LoadoutCase/LoadoutCaseHandle.imageset"
+      },
+      "bbox_icon_1024": {
+        "x": 394,
+        "y": 311,
+        "w": 236,
+        "h": 105
+      },
+      "bbox_case_artboard": {
+        "x": 202,
+        "y": 79,
+        "w": 236,
+        "h": 105
+      },
+      "anchors_icon_1024": {
+        "fold_pivot_left_bracket": [
+          424,
+          395
+        ],
+        "fold_pivot_right_bracket": [
+          600,
+          395
+        ],
+        "grip_center": [
+          512,
+          326
+        ]
+      },
+      "anchors_case_artboard": {
+        "fold_pivot_left_bracket": [
+          232,
+          163
+        ],
+        "fold_pivot_right_bracket": [
+          408,
+          163
+        ],
+        "grip_center": [
+          320,
+          94
+        ]
+      },
+      "note": "Steel handle + rubber grip + brackets. Rides on the lid (parent it to the lid). Fold/swing about the bracket line y=395."
+    },
+    {
+      "name": "body",
+      "z": 3,
+      "in_default_closed_stack": true,
+      "files": {
+        "icon_1024": {
+          "svg": "icon-1024/loadout-case-layer-body.svg",
+          "pdf": "icon-1024/loadout-case-layer-body.pdf"
+        },
+        "case_artboard": {
+          "svg": "case-artboard/loadout-case-layer-body.svg",
+          "pdf": "case-artboard/loadout-case-layer-body.pdf"
+        },
+        "xcassets_imageset": "xcassets/LoadoutCase/LoadoutCaseBody.imageset"
+      },
+      "bbox_icon_1024": {
+        "x": 264,
+        "y": 498,
+        "w": 496,
+        "h": 221
+      },
+      "bbox_case_artboard": {
+        "x": 72,
+        "y": 266,
+        "w": 496,
+        "h": 221
+      },
+      "anchors_icon_1024": {
+        "bottom_center": [
+          512,
+          712
+        ],
+        "center": [
+          512,
+          605.0
+        ]
+      },
+      "anchors_case_artboard": {
+        "bottom_center": [
+          320,
+          480
+        ],
+        "center": [
+          320,
+          373.0
+        ]
+      },
+      "note": "Lower shell (below the seam) + feet + underside shading + the seam lip. Stays put when the lid opens."
+    },
+    {
+      "name": "lid",
+      "z": 4,
+      "in_default_closed_stack": true,
+      "files": {
+        "icon_1024": {
+          "svg": "icon-1024/loadout-case-layer-lid.svg",
+          "pdf": "icon-1024/loadout-case-layer-lid.pdf"
+        },
+        "case_artboard": {
+          "svg": "case-artboard/loadout-case-layer-lid.svg",
+          "pdf": "case-artboard/loadout-case-layer-lid.pdf"
+        },
+        "xcassets_imageset": "xcassets/LoadoutCase/LoadoutCaseLid.imageset"
+      },
+      "bbox_icon_1024": {
+        "x": 264,
+        "y": 404,
+        "w": 496,
+        "h": 94
+      },
+      "bbox_case_artboard": {
+        "x": 72,
+        "y": 172,
+        "w": 496,
+        "h": 94
+      },
+      "anchors_icon_1024": {
+        "hinge_axis_y": 498,
+        "hinge_pivot_rear_center": [
+          512,
+          498
+        ],
+        "hinge_pivot_left_corner": [
+          264,
+          498
+        ],
+        "hinge_pivot_right_corner": [
+          760,
+          498
+        ]
+      },
+      "anchors_case_artboard": {
+        "hinge_axis_y": 266,
+        "hinge_pivot_rear_center": [
+          320,
+          266
+        ],
+        "hinge_pivot_left_corner": [
+          72,
+          266
+        ],
+        "hinge_pivot_right_corner": [
+          568,
+          266
+        ]
+      },
+      "note": "Lid (top 404 → split line 498) with the ribbed ridge and top highlight. Hinge is the rear edge along y=498: in this front view open it by scaling Y toward the hinge (anchor rear_center) and/or rotating about a corner pivot for a tilted swing."
+    },
+    {
+      "name": "rails-body",
+      "z": 5,
+      "in_default_closed_stack": true,
+      "files": {
+        "icon_1024": {
+          "svg": "icon-1024/loadout-case-layer-rails-body.svg",
+          "pdf": "icon-1024/loadout-case-layer-rails-body.pdf"
+        },
+        "case_artboard": {
+          "svg": "case-artboard/loadout-case-layer-rails-body.svg",
+          "pdf": "case-artboard/loadout-case-layer-rails-body.pdf"
+        },
+        "xcassets_imageset": "xcassets/LoadoutCase/LoadoutCaseRailsBody.imageset"
+      },
+      "bbox_icon_1024": {
+        "x": 264,
+        "y": 498,
+        "w": 496,
+        "h": 211
+      },
+      "bbox_case_artboard": {
+        "x": 72,
+        "y": 266,
+        "w": 496,
+        "h": 211
+      },
+      "anchors_icon_1024": {
+        "center": [
+          512,
+          605.0
+        ]
+      },
+      "anchors_case_artboard": {
+        "center": [
+          320,
+          373.0
+        ]
+      },
+      "note": "Steel edge rails + lower rivets on the body."
+    },
+    {
+      "name": "rails-lid",
+      "z": 6,
+      "in_default_closed_stack": true,
+      "files": {
+        "icon_1024": {
+          "svg": "icon-1024/loadout-case-layer-rails-lid.svg",
+          "pdf": "icon-1024/loadout-case-layer-rails-lid.pdf"
+        },
+        "case_artboard": {
+          "svg": "case-artboard/loadout-case-layer-rails-lid.svg",
+          "pdf": "case-artboard/loadout-case-layer-rails-lid.pdf"
+        },
+        "xcassets_imageset": "xcassets/LoadoutCase/LoadoutCaseRailsLid.imageset"
+      },
+      "bbox_icon_1024": {
+        "x": 264,
+        "y": 407,
+        "w": 496,
+        "h": 91
+      },
+      "bbox_case_artboard": {
+        "x": 72,
+        "y": 175,
+        "w": 496,
+        "h": 91
+      },
+      "anchors_icon_1024": {
+        "center": [
+          512,
+          451.0
+        ]
+      },
+      "anchors_case_artboard": {
+        "center": [
+          320,
+          219.0
+        ]
+      },
+      "note": "Steel edge rails + upper rivets on the lid (parent to the lid)."
+    },
+    {
+      "name": "color-bar",
+      "z": 7,
+      "in_default_closed_stack": true,
+      "files": {
+        "icon_1024": {
+          "svg": "icon-1024/loadout-case-layer-color-bar.svg",
+          "pdf": "icon-1024/loadout-case-layer-color-bar.pdf"
+        },
+        "case_artboard": {
+          "svg": "case-artboard/loadout-case-layer-color-bar.svg",
+          "pdf": "case-artboard/loadout-case-layer-color-bar.pdf"
+        },
+        "xcassets_imageset": "xcassets/LoadoutCase/LoadoutCaseColorBar.imageset"
+      },
+      "bbox_icon_1024": {
+        "x": 324,
+        "y": 566,
+        "w": 376,
+        "h": 106
+      },
+      "bbox_case_artboard": {
+        "x": 132,
+        "y": 334,
+        "w": 376,
+        "h": 106
+      },
+      "anchors_icon_1024": {
+        "center": [
+          512,
+          619.0
+        ],
+        "fill_left_edge": [
+          338,
+          619.0
+        ]
+      },
+      "anchors_case_artboard": {
+        "center": [
+          320,
+          387.0
+        ],
+        "fill_left_edge": [
+          146,
+          387.0
+        ]
+      },
+      "note": "Pill colour bar (ramp #FFC66A → #FF8A4C → #E65BA0 → #8E5CF0 → #2E9BFF). For a progress fill, mask the gradient from fill_left_edge."
+    },
+    {
+      "name": "latch-left-base",
+      "z": 8,
+      "in_default_closed_stack": true,
+      "files": {
+        "icon_1024": {
+          "svg": "icon-1024/loadout-case-layer-latch-left-base.svg",
+          "pdf": "icon-1024/loadout-case-layer-latch-left-base.pdf"
+        },
+        "case_artboard": {
+          "svg": "case-artboard/loadout-case-layer-latch-left-base.svg",
+          "pdf": "case-artboard/loadout-case-layer-latch-left-base.pdf"
+        },
+        "xcassets_imageset": "xcassets/LoadoutCase/LoadoutCaseLatchLeftBase.imageset"
+      },
+      "bbox_icon_1024": {
+        "x": 324,
+        "y": 463,
+        "w": 64,
+        "h": 86
+      },
+      "bbox_case_artboard": {
+        "x": 132,
+        "y": 231,
+        "w": 64,
+        "h": 86
+      },
+      "anchors_icon_1024": {
+        "center": [
+          356,
+          506
+        ]
+      },
+      "anchors_case_artboard": {
+        "center": [
+          164,
+          274
+        ]
+      },
+      "note": "Steel latch plate (on the body)."
+    },
+    {
+      "name": "latch-left-lever-closed",
+      "z": 9,
+      "in_default_closed_stack": true,
+      "files": {
+        "icon_1024": {
+          "svg": "icon-1024/loadout-case-layer-latch-left-lever-closed.svg",
+          "pdf": "icon-1024/loadout-case-layer-latch-left-lever-closed.pdf"
+        },
+        "case_artboard": {
+          "svg": "case-artboard/loadout-case-layer-latch-left-lever-closed.svg",
+          "pdf": "case-artboard/loadout-case-layer-latch-left-lever-closed.pdf"
+        },
+        "xcassets_imageset": "xcassets/LoadoutCase/LoadoutCaseLatchLeftLeverClosed.imageset"
+      },
+      "bbox_icon_1024": {
+        "x": 333,
+        "y": 473,
+        "w": 46,
+        "h": 72
+      },
+      "bbox_case_artboard": {
+        "x": 141,
+        "y": 241,
+        "w": 46,
+        "h": 72
+      },
+      "anchors_icon_1024": {
+        "lever_pivot": [
+          356,
+          540.0
+        ]
+      },
+      "anchors_case_artboard": {
+        "lever_pivot": [
+          164,
+          308.0
+        ]
+      },
+      "note": "Blue lever, closed (default). Includes the pivot pin."
+    },
+    {
+      "name": "latch-right-base",
+      "z": 10,
+      "in_default_closed_stack": true,
+      "files": {
+        "icon_1024": {
+          "svg": "icon-1024/loadout-case-layer-latch-right-base.svg",
+          "pdf": "icon-1024/loadout-case-layer-latch-right-base.pdf"
+        },
+        "case_artboard": {
+          "svg": "case-artboard/loadout-case-layer-latch-right-base.svg",
+          "pdf": "case-artboard/loadout-case-layer-latch-right-base.pdf"
+        },
+        "xcassets_imageset": "xcassets/LoadoutCase/LoadoutCaseLatchRightBase.imageset"
+      },
+      "bbox_icon_1024": {
+        "x": 636,
+        "y": 463,
+        "w": 64,
+        "h": 86
+      },
+      "bbox_case_artboard": {
+        "x": 444,
+        "y": 231,
+        "w": 64,
+        "h": 86
+      },
+      "anchors_icon_1024": {
+        "center": [
+          668,
+          506
+        ]
+      },
+      "anchors_case_artboard": {
+        "center": [
+          476,
+          274
+        ]
+      },
+      "note": "Steel latch plate (on the body)."
+    },
+    {
+      "name": "latch-right-lever-closed",
+      "z": 11,
+      "in_default_closed_stack": true,
+      "files": {
+        "icon_1024": {
+          "svg": "icon-1024/loadout-case-layer-latch-right-lever-closed.svg",
+          "pdf": "icon-1024/loadout-case-layer-latch-right-lever-closed.pdf"
+        },
+        "case_artboard": {
+          "svg": "case-artboard/loadout-case-layer-latch-right-lever-closed.svg",
+          "pdf": "case-artboard/loadout-case-layer-latch-right-lever-closed.pdf"
+        },
+        "xcassets_imageset": "xcassets/LoadoutCase/LoadoutCaseLatchRightLeverClosed.imageset"
+      },
+      "bbox_icon_1024": {
+        "x": 645,
+        "y": 473,
+        "w": 46,
+        "h": 72
+      },
+      "bbox_case_artboard": {
+        "x": 453,
+        "y": 241,
+        "w": 46,
+        "h": 72
+      },
+      "anchors_icon_1024": {
+        "lever_pivot": [
+          668,
+          540.0
+        ]
+      },
+      "anchors_case_artboard": {
+        "lever_pivot": [
+          476,
+          308.0
+        ]
+      },
+      "note": "Blue lever, closed (default). Includes the pivot pin."
+    },
+    {
+      "name": "latch-left-lever-open",
+      "z": 12,
+      "in_default_closed_stack": false,
+      "files": {
+        "icon_1024": {
+          "svg": "icon-1024/loadout-case-layer-latch-left-lever-open.svg",
+          "pdf": "icon-1024/loadout-case-layer-latch-left-lever-open.pdf"
+        },
+        "case_artboard": {
+          "svg": "case-artboard/loadout-case-layer-latch-left-lever-open.svg",
+          "pdf": "case-artboard/loadout-case-layer-latch-left-lever-open.pdf"
+        },
+        "xcassets_imageset": "xcassets/LoadoutCase/LoadoutCaseLatchLeftLeverOpen.imageset"
+      },
+      "bbox_icon_1024": {
+        "x": 333,
+        "y": 535,
+        "w": 46,
+        "h": 72
+      },
+      "bbox_case_artboard": {
+        "x": 141,
+        "y": 303,
+        "w": 46,
+        "h": 72
+      },
+      "anchors_icon_1024": {
+        "lever_pivot": [
+          356,
+          540.0
+        ]
+      },
+      "anchors_case_artboard": {
+        "lever_pivot": [
+          164,
+          308.0
+        ]
+      },
+      "note": "Blue lever, open: the closed lever rotated 180° about lever_pivot (darkened underside). Swap or rotate closed → open before the lid lifts."
+    },
+    {
+      "name": "latch-right-lever-open",
+      "z": 13,
+      "in_default_closed_stack": false,
+      "files": {
+        "icon_1024": {
+          "svg": "icon-1024/loadout-case-layer-latch-right-lever-open.svg",
+          "pdf": "icon-1024/loadout-case-layer-latch-right-lever-open.pdf"
+        },
+        "case_artboard": {
+          "svg": "case-artboard/loadout-case-layer-latch-right-lever-open.svg",
+          "pdf": "case-artboard/loadout-case-layer-latch-right-lever-open.pdf"
+        },
+        "xcassets_imageset": "xcassets/LoadoutCase/LoadoutCaseLatchRightLeverOpen.imageset"
+      },
+      "bbox_icon_1024": {
+        "x": 645,
+        "y": 535,
+        "w": 46,
+        "h": 72
+      },
+      "bbox_case_artboard": {
+        "x": 453,
+        "y": 303,
+        "w": 46,
+        "h": 72
+      },
+      "anchors_icon_1024": {
+        "lever_pivot": [
+          668,
+          540.0
+        ]
+      },
+      "anchors_case_artboard": {
+        "lever_pivot": [
+          476,
+          308.0
+        ]
+      },
+      "note": "Blue lever, open: the closed lever rotated 180° about lever_pivot (darkened underside). Swap or rotate closed → open before the lid lifts."
+    },
+    {
+      "name": "icon-overlay",
+      "z": 14,
+      "in_default_closed_stack": true,
+      "files": {
+        "icon_1024": {
+          "svg": "icon-1024/loadout-case-layer-icon-overlay.svg",
+          "pdf": "icon-1024/loadout-case-layer-icon-overlay.pdf"
+        }
+      },
+      "bbox_icon_1024": {
+        "x": 97,
+        "y": 97,
+        "w": 830,
+        "h": 830
+      },
+      "anchors_icon_1024": {
+        "center": [
+          512,
+          512
+        ]
+      },
+      "note": "Lodge sheen + rim stroke over the whole squircle (topmost)."
+    }
+  ]
+}
