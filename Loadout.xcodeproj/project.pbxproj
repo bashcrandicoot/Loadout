@@ -6,6 +6,9 @@
 	objectVersion = 90;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5E0000000000000500000001 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 5E0000000000000500000003 /* Sparkle */; };
+/* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		5E0000000000000300000000 /* PBXContainerItemProxy */ = {
@@ -27,6 +30,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				Loadout.entitlements,
 			);
 			target = 5E0000000000000100000000 /* Loadout */;
 		};
@@ -52,6 +56,7 @@
 		5E0000000000000130000000 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				5E0000000000000500000001 /* Sparkle in Frameworks */,
 			);
 		};
 		5E0000000000000230000000 /* Frameworks */ = {
@@ -97,6 +102,9 @@
 				5E0000000000000000000010 /* Loadout */,
 			);
 			name = Loadout;
+			packageProductDependencies = (
+				5E0000000000000500000003 /* Sparkle */,
+			);
 			productName = Loadout;
 			productReference = 5E0000000000000000000120 /* Loadout.app */;
 			productType = "com.apple.product-type.application";
@@ -150,6 +158,9 @@
 			);
 			mainGroup = 5E0000000000000000000001;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5E0000000000000500000002 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 5E0000000000000000000020 /* Products */;
 			projectDirPath = "";
@@ -328,6 +339,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_STANDALONE_ICON_BEHAVIOR = all;
+				CODE_SIGN_ENTITLEMENTS = Loadout/Loadout.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -363,6 +375,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_STANDALONE_ICON_BEHAVIOR = all;
+				CODE_SIGN_ENTITLEMENTS = Loadout/Loadout.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Manual;
@@ -473,6 +486,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5E0000000000000500000002 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = exactVersion;
+				version = 2.10.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5E0000000000000500000003 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5E0000000000000500000002 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 	};
 	rootObject = 5E0000000000000000000000 /* Project object */;

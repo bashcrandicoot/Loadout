@@ -35,6 +35,7 @@ struct LoadoutApp: App {
         let model = AppModel()
         _model = StateObject(wrappedValue: model)
         AppDelegate.model = model
+        _ = AppUpdates.controller
     }
 
     var body: some Scene {
@@ -49,6 +50,7 @@ struct LoadoutApp: App {
         .commands {
             CommandGroup(replacing: .appInfo) {
                 Button("About Loadout") { Support.showAboutPanel() }
+                CheckForUpdatesView(updater: AppUpdates.updater)
                 Button("Support Loadout…") { Support.openTipJar() }
             }
             CommandGroup(replacing: .newItem) {
