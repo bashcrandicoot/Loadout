@@ -5,6 +5,15 @@ import AppKit
 @main
 enum LoadoutLauncher {
     static func main() {
+        #if DEBUG
+        if let folder = CaseFilm.requestedFolder {
+            // Offscreen film of the case animation: no windows, never activates.
+            _ = NSApplication.shared
+            NSApp.setActivationPolicy(.prohibited)
+            MainActor.assumeIsolated { CaseFilm.run(folder) }
+            exit(0)
+        }
+        #endif
         if AppModel.isRunningUnitTests {
             LoadoutTestHost.main()
         } else {
@@ -91,6 +100,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 /// `LOADOUT_SCREENSHOT=1` (with `open -g -j`) shows the window behind other apps without
 /// activating Loadout, so `screencapture -l` can capture it while the user keeps working.
 /// `LOADOUT_DEMO_DROP=/path.zip` opens the drop sheet for that file (after `LOADOUT_DEMO_DROP_DELAY` seconds).
+/// `LOADOUT_DEMO_INSTALL_AFTER=s` then presses Install; `LOADOUT_DEMO_TURN_OFF_AFTER=s` turns off
+/// the first three items Loadout installed (sandbox only), to watch the case run live.
 enum Screenshots {
     static var isActive: Bool { ProcessInfo.processInfo.environment["LOADOUT_SCREENSHOT"] == "1" }
 
@@ -113,6 +124,15 @@ enum Screenshots {
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                     AppDelegate.model?.handleDrop([URL(fileURLWithPath: drop)])
                     showDropSheetPanel(over: NSApp.windows.first { $0.title == "Loadout" })
+                    if let after = Double(env["LOADOUT_DEMO_INSTALL_AFTER"] ?? "") {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + after) { AppDelegate.model?.installPending() }
+                    }
+                }
+            }
+            if let after = Double(env["LOADOUT_DEMO_TURN_OFF_AFTER"] ?? ""), env["LOADOUT_SANDBOX"] != nil {
+                DispatchQueue.main.asyncAfter(deadline: .now() + after) {
+                    guard let model = AppDelegate.model else { return }
+                    model.setEnabled(false, Array(model.items.filter { $0.isManaged && $0.state == .enabled }.prefix(3)))
                 }
             }
         }

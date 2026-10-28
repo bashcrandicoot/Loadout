@@ -21,6 +21,9 @@ If macOS protects Resolve's LUT folder, Loadout asks for an administrator passwo
 
 Loadout doesn't use Resolve's scripting API (that's Studio only), so it works with the free version of DaVinci Resolve too. The Mac App Store version of Resolve isn't supported yet.
 
+As you install, turn off or remove things, a small kit case packs or unpacks them; the
+bar on its front is the real progress. See `docs/case-art.md`.
+
 ## Requirements
 
 - macOS 14 Sonoma or later
