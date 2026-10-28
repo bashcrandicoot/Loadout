@@ -222,8 +222,10 @@ final class AppModel: ObservableObject {
         let installer = Installer(paths: paths)
         let planned = installer.plan(pending.scan, options: pending.options, index: index)
         let installing = planned.filter { $0.conflict == nil || pending.options.conflictPolicy != .skip }
-        var run = CaseRun(direction: .stash, cards: CaseCard.cards(kinds: installing.map(\.kind)))
-        run.refresh = installing.map(\.kind.refresh).max() ?? .none
+        let run = CaseRun(subject: CaseSortSubject(wording: .install, title: pending.options.packName,
+                                                   fileName: pending.scan.sources.first?.lastPathComponent,
+                                                   kinds: installing.map(\.kind),
+                                                   refresh: installing.map(\.kind.refresh).max() ?? .none))
         installRun = run
         let id = run.id
         let options = pending.options
@@ -286,9 +288,8 @@ final class AppModel: ObservableObject {
         let refresh = LibraryActions.refresh(for: targets)
         let what = "\(enabled ? "Turned on" : "Turned off") \(n) item\(n == 1 ? "" : "s")."
         let fileOperator = fileOperator
-        // Turning on stashes the files back in the case; turning off unloads them.
-        let progress = startLibraryRun(enabled ? .stash : .unload, items: moving, refresh: refresh,
-                                       caption: "\(enabled ? "Turning on" : "Turning off") \(Self.describe(moving))")
+        // Turning on packs the files back into the case; turning off takes them out.
+        let progress = startLibraryRun(enabled ? .turnOn : .turnOff, items: moving, refresh: refresh)
         runOffMain({
             if enabled { try actions.enable(targets, using: fileOperator, progress: progress) }
             else { try actions.disable(targets, using: fileOperator, progress: progress) }
@@ -328,8 +329,7 @@ final class AppModel: ObservableObject {
         let startIndex = index
         let fileOperator = fileOperator
         let store = store
-        let progress = startLibraryRun(.unload, items: targets.filter { $0.state != .missing }, refresh: refresh,
-                                       caption: "Moving \(Self.describe(targets)) to the Trash")
+        let progress = startLibraryRun(.remove, items: targets.filter { $0.state != .missing }, refresh: refresh)
         runOffMain({ () throws -> LibraryIndex in
             var newIndex = startIndex
             try actions.remove(targets, index: &newIndex, using: fileOperator, progress: progress)
@@ -379,18 +379,19 @@ final class AppModel: ObservableObject {
         if var run = libraryRun, run.id == id { change(&run); libraryRun = run }
     }
 
-    private func startLibraryRun(_ direction: CaseDirection, items: [LibraryItem], refresh: ResolveRefresh,
-                                 caption: String) -> FileOpProgress.Handler? {
+    private func startLibraryRun(_ wording: CaseRunWording, items: [LibraryItem],
+                                 refresh: ResolveRefresh) -> FileOpProgress.Handler? {
         guard !items.isEmpty else { return nil }
-        var run = CaseRun(direction: direction, cards: CaseCard.cards(items: items), caption: caption)
-        run.refresh = direction == .stash ? refresh : .none
+        let run = CaseRun(subject: CaseSortSubject(wording: wording, title: Self.describe(items).replacingOccurrences(of: "“", with: "").replacingOccurrences(of: "”", with: ""),
+                                                   kinds: items.map(\.kind),
+                                                   refresh: wording.direction == .install ? refresh : .none))
         libraryRun = run
         return progressHandler(for: run.id)
     }
 
     private func finishLibraryRun(refresh: ResolveRefresh) {
         guard let run = libraryRun else { return }
-        finishRun(run.id, refresh: run.direction == .stash ? refresh : .none)
+        finishRun(run.id, refresh: run.direction == .install ? refresh : .none)
     }
 
     /// Marks the run finished; the case closes up and calls `caseRunSettled`. A timer makes
@@ -399,11 +400,10 @@ final class AppModel: ObservableObject {
         updateRun(id) {
             $0.progress = 1
             $0.finished = true
-            $0.refresh = refresh
+            $0.subject.refresh = refresh
         }
         let run = installRun?.id == id ? installRun : libraryRun?.id == id ? libraryRun : nil
-        let cards = run?.cards.count ?? 1
-        let longest = run?.direction == .unload ? CaseMotion.unloadDuration(cards: cards) : CaseMotion.stashDuration(cards: cards)
+        let longest = run.map { CaseSortDriver.longestDuration($0.direction, layout: $0.layout) } ?? 0
         DispatchQueue.main.asyncAfter(deadline: .now() + longest + 1.5) { [weak self] in
             self?.caseRunSettled(id)
         }

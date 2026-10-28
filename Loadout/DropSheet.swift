@@ -19,16 +19,12 @@ struct DropSheet: View {
         let refresh = plan.map(\.kind.refresh).max() ?? .none
 
         let installing = model.installRun != nil
-        let idleCards = CaseCard.cards(kinds: plan.filter { $0.conflict == nil || pending.options.conflictPolicy != .skip }.map(\.kind))
+        let idleSubject = CaseSortSubject(wording: .install, title: pending.options.packName,
+                                          fileName: scan.sources.first?.lastPathComponent,
+                                          kinds: plan.filter { $0.conflict == nil || pending.options.conflictPolicy != .skip }.map(\.kind),
+                                          refresh: refresh)
 
         return VStack(spacing: 0) {
-            // The flight case: the files go in when you install.
-            CaseStage(run: model.installRun, idleCards: idleCards, layout: .sheet,
-                      onSettled: { model.caseRunSettled($0) })
-                .frame(maxWidth: .infinity)
-                .padding(.top, 6)
-                .background(Color.primary.opacity(0.025))
-                .overlay(alignment: .bottom) { Divider() }
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     // Header: what was dropped.
@@ -140,6 +136,11 @@ struct DropSheet: View {
             }
 
             Divider()
+            // The case-sort strip (like Lodge's wagon strip): the files go into the case as they install.
+            CaseSortStrip(run: model.installRun, subject: idleSubject, onSettled: { model.caseRunSettled($0) })
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, 2)
+                .background(.bar)
             HStack {
                 Text(model.resolveRunning ? "Resolve can stay open." : "Resolve doesn’t need to be open.")
                     .font(.callout).foregroundStyle(.secondary)

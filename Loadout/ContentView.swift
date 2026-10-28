@@ -107,28 +107,6 @@ struct DropHighlight: View {
     }
 }
 
-/// A turn-off, turn-on or removal: the case unloads (or stashes) the items over the Library.
-struct CaseToast: View {
-    let run: CaseRun
-    var onSettled: (UUID) -> Void
-
-    var body: some View {
-        ZStack(alignment: .leading) {
-            CaseStage(run: run, layout: .toast, onSettled: onSettled)
-            Text(run.caption)
-                .font(.callout.weight(.medium))
-                .lineLimit(2)
-                .frame(width: 170, alignment: .leading)
-                .padding(.leading, 20)
-                .padding(.bottom, 34)   // the queued cards sit below
-        }
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(.separator.opacity(0.5)))
-        .shadow(color: .black.opacity(0.15), radius: 12, y: 4)
-        .allowsHitTesting(false)
-    }
-}
-
 struct LibraryToolbar: ToolbarContent {
     @EnvironmentObject private var model: AppModel
 
