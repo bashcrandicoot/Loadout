@@ -67,4 +67,4 @@ DaVinci Resolve is a trademark of Blackmagic Design. Loadout is an independent a
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+All rights reserved. See [LICENSE](LICENSE).
